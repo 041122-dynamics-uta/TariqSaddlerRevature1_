@@ -1,0 +1,14 @@
+Dads and Grads
+
+Starting off, we can assume Stephanie is a graduate since that is the name of a female
+Since the first bullet says "Micheal's son," we can assume Micheal is a father
+Elias and James are both graduates because they both played on the baseball team
+This would leave Alberto and Ken to be fathers. Putting the list, thus far, to look like this:
+>Fathers: Micheal, Ken, Alberto
+>Grad: Stephanie, Elias, James
+(No matches yet)
+
+
+Since Micheal has a son and he's not related to Elias, his son has to be James
+Since Alberto can only be related to James or Elias, and it's not James, it must be Elias
+Which leaves Ken with Stephanie
