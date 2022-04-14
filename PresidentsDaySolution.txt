@@ -1,0 +1,17 @@
+Presidents Day
+
+We are given Milliard's birthday is on Thursday
+John is 2 days older than Abe, so Abe cant be Tuesday or Monday
+(or else John's birthday would be on a weekend, which is false)
+Abe's birthday cannot be on Friday because William's is after Abe's
+So Abe has to be Wednesday
+William has to be Friday because it is after Abes, and Thurday is taken
+John is on Monday because he is 2 days older than Abe
+Which leaves George for Tuesday
+
+Monday: John
+Tuesday: George
+Wednesday: Abe
+Thrusday: Milliard
+Friday: William
+
