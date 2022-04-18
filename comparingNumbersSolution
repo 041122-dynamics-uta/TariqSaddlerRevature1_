@@ -1,0 +1,12 @@
+read int1
+read int2
+if [ $int1 -gt $int2 ]
+    then
+    echo X is greater than Y
+elif [ $int1 -lt $int2 ]
+    then
+    echo X is less than Y
+elif [ $int1 == $int2 ]
+    then
+    echo X is equal to Y
+fi
