@@ -8,20 +8,20 @@ chooseMath()
     if [ $validMath == 1 ]
     then
         validMath=0
-        echo ************************************************************
+        echo ------------------------------------------------------------
         echo Please type which math you would like to perform by typing
         echo add, subtract, multiply, or divide. Or to quit, type \'quit\'.
-        echo ************************************************************
+        echo ------------------------------------------------------------
         read mathType
     else
-        echo **************************************************************
+        echo --------------------------------------------------------------
         echo How about a valid input this time?
         echo Type one of the following:
         echo add, subtract, multiply, or divide. Or to quit, type \'quit\'.
-        echo **************************************************************
+        echo --------------------------------------------------------------
         read mathType
     fi
-    for((i=0; i<=${#mathTypes[@]}; i++))
+    for((i=0; i<=${#mathTypes[@]}-1; i++))
     do
         # echo ${mathTypes[i]}
         if [ ${mathTypes[i]} == $mathType ]
@@ -30,9 +30,10 @@ chooseMath()
             inputNumbers
             break
         elif [ $mathType == "quit" ]
-            echo ********************
-            echo Alright, seeya nerd. :)
-            echo ********************
+        then
+            echo --------------------
+            echo Alright, seeya nerd.
+            echo --------------------
             exit
         fi
     done
@@ -48,14 +49,14 @@ chooseMath()
 
 inputNumbers()
 {
-    echo ******************************
+    echo ------------------------------
     echo I can $mathType two integers.
     echo Please input the first integer.
-    echo ******************************
+    echo ------------------------------
     read int1
-    echo ***********************
+    echo -----------------------
     echo And the second integer.
-    echo ***********************
+    echo -----------------------
     read int2
 
         if [ $mathType == "add" ]
@@ -119,15 +120,15 @@ end()
 {
     if [ $mathType == "divide" ]
     then
-        echo *****************************************************************************
+        echo -----------------------------------------------------------------------------
         echo The $resultType of $int1 and $int2 is $result with a remainder of $remainder!
     else
-    echo *****************************************************************************
+    echo -----------------------------------------------------------------------------
         echo The $resultType of $int1 and $int2 is $result!
 
     fi
     echo Would you like to use the calculator again? Please type yes or no.
-    echo *****************************************************************************
+    echo -----------------------------------------------------------------------------
     read ans
 
     if [ $ans == "yes" ]
@@ -139,20 +140,20 @@ end()
     elif [ $ans == "no" ]
     then
     {
-        echo ******************************
+        echo ------------------------------
         echo Let\'s do this again sometime!
-        echo ******************************
+        echo ------------------------------
         exit
     }
     else
-        echo ******************************************
+        echo ------------------------------------------
         echo I\'m gonna assume you meant quit. Goodbye!
-        echo ******************************************
+        echo ------------------------------------------
         exit
     fi
 }
 
-echo *******************************
+echo -------------------------------
 echo Welcome to the Bash Calculator.
 validMath=1
 chooseMath
