@@ -152,7 +152,7 @@ end()
         exit
     fi
 }
-
+echo For sake of example
 echo -------------------------------
 echo What is your name?
 echo -------------------------------
