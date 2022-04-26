@@ -15,7 +15,7 @@ chooseMath()
         read mathType
     else
         echo --------------------------------------------------------------
-        echo How about a valid input this time?
+        echo How about a valid input this time, $name?
         echo Type one of the following:
         echo add, subtract, multiply, or divide. Or to quit, type \'quit\'.
         echo --------------------------------------------------------------
@@ -140,9 +140,9 @@ end()
     elif [ $ans == "no" ]
     then
     {
-        echo ------------------------------
-        echo Let\'s do this again sometime!
-        echo ------------------------------
+        echo -------------------------------------
+        echo Let\'s do this again sometime, $name!
+        echo -------------------------------------
         exit
     }
     else
@@ -154,6 +154,10 @@ end()
 }
 
 echo -------------------------------
-echo Welcome to the Bash Calculator.
+echo What is your name?
+echo -------------------------------
+read name
+echo -------------------------------
+echo Welcome to the Bash Calculator, $name!
 validMath=1
 chooseMath
