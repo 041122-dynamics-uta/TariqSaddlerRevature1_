@@ -1,0 +1,3 @@
+select distinct city from station where city NOT LIKE '[aeiou]%';
+
+--MS SQL Server
