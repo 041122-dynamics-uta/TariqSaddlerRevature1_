@@ -1,0 +1,12 @@
+select
+CASE
+    when (A = B AND B = C) then 'Equilateral'
+    when (A + B <= C) OR (B + C <= A) OR (A + C <= B) THEN 'Not A Triangle'
+    when (A = B AND A + B > C) OR (B = C AND B + C > A) OR (A = C AND A + C > B) then 'Isosceles'
+    
+    
+    ElSE 'Scalene' 
+    END
+FROM TRIANGLES;
+
+--MySQL
