@@ -93,8 +93,8 @@ namespace P1StoreApp
                         Console.WriteLine("INVALID LOGIN CREDENTIALS");
                         loginOrRegisterHere();
                     }
-                    viewOrShop();
-                    
+                    historyOrShop();
+   
                 }
             }    
 
@@ -205,17 +205,17 @@ namespace P1StoreApp
                     }
                 }
                 
-            viewOrShop();
+            historyOrShop();
             }
-            void viewOrShop()
+            void historyOrShop()
             {
 
-                Console.WriteLine("You wanna view the selection in all the stores? Or just start shopping at one?");
+                Console.WriteLine("Do you want to shop, or view order history.");
                 Console.WriteLine("Type 'view' or 'shop.");
                 string shopOrView = Console.ReadLine();
-                if (shopOrView == "view" || shopOrView == "see" || shopOrView == "browse")
+                if (shopOrView == "view" || shopOrView == "see" || shopOrView == "history")
                 {
-                    viewProducts(0);
+                    viewHistory();
                 }
                 else if(shopOrView == "shop" || shopOrView == "shopping" || shopOrView == "s")
                 {
@@ -232,6 +232,21 @@ namespace P1StoreApp
                 //Once that's done, for loop print each product on the list and their attributes
                 //Reprompt: Shop or view?
             
+            void viewHistory()
+            {
+                List<P1OH_ModelsClass> orders = orderHistory_bc.OrdersList();
+                foreach(P1OH_ModelsClass o in orders)
+                {
+                    Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID].name_of_user} ordered $ {o.total_cost}");
+                }
+                if(orders.Count == 0)
+                {
+                    Console.WriteLine("----------------------------");
+                    Console.WriteLine("No order history to display.");
+                }
+            }
+
+
 
             void viewProducts(int currentStore)
             {
@@ -447,10 +462,12 @@ namespace P1StoreApp
                     }
                     if(validItem)
                     {
+                        Console.WriteLine("-----------------------------------------------------------------------------------------------------------------");
                         Console.WriteLine($"This member is the PRODUCT ID: {products[j].ProductID}, NAME: {products[j].p_name}, INTENSITY: {products[j].intensity}");//and so on
                         Console.WriteLine($"PRICE: {products[j].price}, INVENTORY: {products[j].inventory}, STORE ID: {products[j].fk_StoreID}");//and so on
                         Console.WriteLine($"DESCRIPTION: {products[j].details}");
                     }
+
 
                    
                 }
@@ -460,9 +477,9 @@ namespace P1StoreApp
                 }
                 else
                 {
-                    viewOrShop(); 
+                    historyOrShop();
                 }
-            }
+            }//End of viewProducts()
 
             void shopProducts()
             {
@@ -501,8 +518,9 @@ namespace P1StoreApp
             }
             void startShop(int storeSelection, decimal cartTotalCost, int totalItemsCart)
             {   Console.WriteLine("---------------------------------------------------"); 
+                Console.WriteLine($"Your cart is worth ${cartTotalCost}");
                 Console.WriteLine("What'll you have?");
-                Console.WriteLine("Type 'help' if you don't know how to shop.");
+                Console.WriteLine("----------Type 'help' if you don't know how to shop.---------------");
 
                 string action = Console.ReadLine();
 
@@ -518,7 +536,7 @@ namespace P1StoreApp
                     startShop(storeSelection, cartTotalCost, totalItemsCart);
                 }
                 
-                else if(actionFormat.Length < 2)
+                else if((action == "add" || action == "delete") && actionFormat.Length < 2)
                 {
                     Console.WriteLine($"{verb} what exactly? (try typing a ProductID number)(press enter if you have no specifications)");
                     dObject = Console.ReadLine();
@@ -532,30 +550,33 @@ namespace P1StoreApp
                     dObject = actionFormat[1];
                 }
 
-                switch(storeSelection)
-                {
-                    case 1:
-                        enterStore1(verb, dObject, cartTotalCost, totalItemsCart);
-                    break;
+                enterStore(storeSelection, verb, dObject, cartTotalCost, totalItemsCart);
 
-                    case 2:
-                        enterStore2(verb, dObject, cartTotalCost, totalItemsCart);
-                    break;
 
-                    case 3:
-                        enterStore3(verb, dObject, cartTotalCost, totalItemsCart);
-                    break;
-                }
+                // switch(storeSelection)
+                // {
+                //     case 1:
+                //         enterStore(verb, dObject, cartTotalCost, totalItemsCart);
+                //     break;
+
+                //     case 2:
+                //         enterStore2(verb, dObject, cartTotalCost, totalItemsCart);
+                //     break;
+
+                //     case 3:
+                //         enterStore3(verb, dObject, cartTotalCost, totalItemsCart);
+                //     break;
+                // }
 
                 
             }
             
 
-            void enterStore1(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
+            void enterStore(int storeNum, string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
             {
                 if(act == "view")
                 {
-                    viewProducts(1);
+                    viewProducts(storeNum);
                 }
                 
                 
@@ -574,13 +595,13 @@ namespace P1StoreApp
                     {
                         Console.WriteLine("------------------------------------");
                         Console.WriteLine("We ain't got that much of that item!");
-                        enterStore1(act, dObj, totalCostofCart, numOfItemsInCart);
+                        enterStore(storeNum, act, dObj, totalCostofCart, numOfItemsInCart);
                     }
                     else if(Convert.ToInt32(howMany) + totalCostofCart > 500)
                     {
                         Console.WriteLine("------------------------------------");
                         Console.WriteLine("Your order can't exceed 500 bucks. I wish it could!");
-                        enterStore1(act, dObj, totalCostofCart, numOfItemsInCart);
+                        enterStore(storeNum, act, dObj, totalCostofCart, numOfItemsInCart);
                     }
                     else if(Convert.ToInt32(howMany) + numOfItemsInCart > 50)
                     {
@@ -647,8 +668,8 @@ namespace P1StoreApp
                             numOfItemsInCart += Convert.ToInt32(howMany);
 
                             string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                            string myCartQuery = $"INSERT INTO shopping_cart (fk_ProductID, quantity_in_cart) VALUES ({Convert.ToInt32(dObj)}, {Convert.ToInt32(howMany)});";
-                            string myCartQuery2 = $"UPDATE products SET inventory = inventory - {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";                            
+                            string myCartQuery = $"UPDATE shopping_cart SET quantity_in_cart = quantity_in_cart - {Convert.ToInt32(howMany)} WHERE CartSlotID = {cartSlot};";
+                            string myCartQuery2 = $"UPDATE products SET inventory = inventory + {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";                            
 
                             using (SqlConnection cartQuery = new SqlConnection(connectionString))
                             {
@@ -673,14 +694,45 @@ namespace P1StoreApp
 
                         }
                     }
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
+                }
+                else if (act == "delete")
+                {
+
+                    Console.WriteLine($"How many {products[Convert.ToInt32(dObj)].p_name}s do you want? (Type 'cancel' to cancel.)");
+                    string howMany = Console.ReadLine();
+
+                    string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                    string myCartQuery = $"INSERT INTO shopping_cart (fk_ProductID, quantity_in_cart) VALUES ({Convert.ToInt32(dObj)}, {Convert.ToInt32(howMany)});";
+                    string myCartQuery2 = $"UPDATE products SET inventory = inventory - {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";
+
+                    using (SqlConnection cartQuery = new SqlConnection(connectionString))
+                            {
+
+                                SqlCommand command = new SqlCommand(myCartQuery, cartQuery);
+                                cartQuery.Open();
+                                SqlDataReader results9 = command.ExecuteReader();
+                                cartQuery.Close();
+                                    
+                            }
+                            using (SqlConnection cartQuery2 = new SqlConnection(connectionString))
+                            {
+
+                                SqlCommand command = new SqlCommand(myCartQuery2, cartQuery2);
+                                cartQuery2.Open();
+                                SqlDataReader results8 = command.ExecuteReader();
+                                cartQuery2.Close();
+                                    
+                            }
+                            Console.WriteLine("---------------------------------------------------");
+                            Console.WriteLine($"{howMany} of those, comin' in hot!");
                 }
 
                 else if(act == "checkout")
                 {
                     //should be a condition to check if the cart is empty
                     string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                    string myCartQuery = $"INSERT INTO order_history (fk_StoreID, fk_CustomerID, total_cost) VALUES (1, {currentID}, {totalCostofCart});";    
+                    string myCartQuery = $"INSERT INTO order_history (fk_StoreID, fk_CustomerID, total_cost) VALUES ({storeNum}, {currentID}, {totalCostofCart});";    
                     string myCartQuery2 = $"TRUNCATE TABLE shopping_cart;";                        
 
                     using (SqlConnection cartQuery = new SqlConnection(connectionString))
@@ -705,7 +757,7 @@ namespace P1StoreApp
                     totalCostofCart = 0;
                     Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine("BOOM! It's all yours, pal! Thank for your service!");
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
 
                 }
                 else if(act == "cart")
@@ -716,12 +768,12 @@ namespace P1StoreApp
                     {
                         Console.WriteLine($"You have - {c.quantity_in_cart} of product {c.fk_ProductID}, that is {products[c.fk_ProductID].p_name} ");
                     }
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
                 else if(act == "wipe")
                 {
                     //truncate the shopping cart
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
                 else if(act == "history")
                 {
@@ -730,25 +782,25 @@ namespace P1StoreApp
                     {
                         Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID].name_of_user} ordered $ {o.total_cost}");
                     }
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
                 else
                 {
                     //invalid input
                     Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine($"That's an INVALID INPUT pal, work with me here!.");
-                    startShop(1, totalCostofCart, numOfItemsInCart);
+                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
 
             }
-            void enterStore2(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
-            {
-                //simply paste from the previous store and change variables
-            }
-            void enterStore3(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
-            {
-                //simply paste from the previous store and change variables
-            }
+            // void enterStore2(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
+            // {
+            //     //simply paste from the previous store and change variables
+            // }
+            // void enterStore3(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
+            // {
+            //     //simply paste from the previous store and change variables
+            // }
 
 
                 //PLAYING AROUND
