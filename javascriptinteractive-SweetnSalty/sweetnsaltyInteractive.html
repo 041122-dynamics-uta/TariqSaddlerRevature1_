@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetnSalty</title>
+    <style>
+        #secondPrompt {display: none;}
+        #resetButton {display: none;}
+    </style>
+</head><!--The second prompt is hiding until we submit the first item successfully-->
+
+    <body>
+    <h1>Sweet&Salty Interactive!</h1>
+        <p>You will enter 2 numbers, and this program will print back all numbers between, but multiples of 3 will be replaced wiht the word "sweet", 5 with "salty", and if it's both, then "Sweet&Salty!"</p>
+
+    <h3>Enter the first number below.</h2>
+    <form id="firstPrompt"><!--We give this tag an id so we can reference it in the javascript-->
+        <label>First Number</label>
+        <input type="number" placeholder="First number goes here" id="firstnum">
+        <button type="button" id="btn1" onclick="buttonFunc()">Submit</button>
+        <div class="errmessage" id="err1"></div>
+    </form>
+    <form id="secondPrompt">
+        <h3>And the final number.</h3>
+        <label>Final Number</label>
+        <input type="number" placeholder="Second number goes here" id="secondnum">
+        <button type="button" id="btn2" onclick="buttonFunc2()">Submit</button><!--When we click the button, it calls the function in the js file-->
+        <div class="errmessage" id="err2"></div>
+
+    </form>
+    <form>
+        <h3>Press enter or click start to start the calulation</h3>
+        <button type="button" id="btn3" onclick="startFunc(input1, input2)">Start</button>
+    </form>
+
+    <form id="print">
+        <h3>Results will go under here.</h3>
+        <div class="output" id="results"></div>
+    </form>
+
+
+
+    <form id="print2">
+        <h3></h3>
+        <div class="output" id="results2"></div>
+    </form>
+
+    <form id="resetButton">
+        <button type="button" id="resetbtn" onclick="resetPage()">Reset</button>
+    </form>
+
+
+
+
+
+
+
+
+<script src="./sweetnsaltyInteractive.js"></script><!--This lets us use a particular js file-->
+</body>
+</html>
+
+
+<!-- (THIS COMMENT WRITTEN BY ALEC)
+1: create folder: html, js --css styling must be internal--
+2: link js to html
+PRESENT START BUTTON
+3: begin with instructions text and then choice input box and enter
+Step 7 really should go here, INPUT VALIDATION
+Each choice input should print one at a time
+4: “please press enter to display your results” line
+5: as user progresses, alter/delete/add elements strictly thru JS DOM manipulation
+6: PLAN AHEAD for styling; set class/id attributes for respective css style rules 
+Apply classes dynamically using DOM manipulation;
+Class/id names will be used in the <head> section to add styles to specified class/id
+7: The start and stop numbers must be validated to be at least 200 apart and no more than 10,000 apart
+Start number < end number
+non-negative
+INPUT VALIDATION FOR JS
+Errors caught will 1. display explanation in red text 2. present the step again
+8: run swtnslty code except with 40 per line and user determined start and end numbers
+Instead of printing to console, results should appear as html content on webpage
+9: swts and slts should be in a class that prints them green 
+-->

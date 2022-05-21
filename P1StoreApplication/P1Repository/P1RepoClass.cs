@@ -184,7 +184,7 @@ public class P1OH_RepoClass
         //USE ADO.NET
         //Use mapper to transfer the values into P1Models products in a List<>
             string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            string myQuery5 = "SELECT * FROM shopping_cart";
+            string myQuery5 = "SELECT * FROM order_history";
             using (SqlConnection query5 = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(myQuery5, query5);

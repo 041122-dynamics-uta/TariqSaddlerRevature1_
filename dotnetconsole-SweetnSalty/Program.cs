@@ -38,7 +38,7 @@ namespace sweetNSalty
                 // {
                 //     total.Add(i);
                 // }
-
+                int k = Convert.ToInt32(Console.ReadLine());
                 foreach(int i in total)
                 {
                     if(lineBreak == qty)
