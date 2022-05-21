@@ -237,13 +237,15 @@ namespace P1StoreApp
                 List<P1OH_ModelsClass> orders = orderHistory_bc.OrdersList();
                 foreach(P1OH_ModelsClass o in orders)
                 {
-                    Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID].name_of_user} ordered $ {o.total_cost}");
+                    Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID-1].name_of_user} ordered $ {o.total_cost} of products.");
                 }
                 if(orders.Count == 0)
                 {
                     Console.WriteLine("----------------------------");
                     Console.WriteLine("No order history to display.");
                 }
+
+                historyOrShop();
             }
 
 
@@ -662,16 +664,18 @@ namespace P1StoreApp
 
                             List<P1SC_ModelsClass> cart = shoppingCart_bc.ShoppingList();
 
-                            for(int x = 0; x<cart.Count; x++)
-                            {
-                                totalCostofCart += products[cart[x].fk_ProductID].price;
-                                Console.WriteLine($"{products[cart[x].fk_ProductID].price}");
-                                Console.ReadLine();
-                            }
+                            // for(int x = 0; x<cart.Count; x++)
+                            // {
+                            //     totalCostofCart += products[cart[x].fk_ProductID].price;
+                            //     Console.WriteLine($"{products[cart[x].fk_ProductID].price}");
+                            //     Console.ReadLine();
+                            // }
+
+                            totalCostofCart += Convert.ToInt32(howMany) * products[cart[cartSlot].fk_ProductID].price;
                             numOfItemsInCart += Convert.ToInt32(howMany);
 
-                            Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
-                            Console.ReadLine();
+                            // Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
+                            // Console.ReadLine();
 
                             startShop(storeNum, totalCostofCart, numOfItemsInCart);
                         }
@@ -681,8 +685,8 @@ namespace P1StoreApp
 
 
                             string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                            string myCartQuery = $"UPDATE shopping_cart SET quantity_in_cart = quantity_in_cart - {Convert.ToInt32(howMany)} WHERE CartSlotID = {cartSlot};";
-                            string myCartQuery2 = $"UPDATE products SET inventory = inventory + {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";                            
+                            string myCartQuery = $"INSERT INTO shopping_cart (fk_ProductID, quantity_in_cart) VALUES ({Convert.ToInt32(dObj)}, {Convert.ToInt32(howMany)});";
+                            string myCartQuery2 = $"UPDATE products SET inventory = inventory - {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";                            
 
                             using (SqlConnection cartQuery = new SqlConnection(connectionString))
                             {
@@ -704,11 +708,14 @@ namespace P1StoreApp
                             }
                             Console.WriteLine("---------------------------------------------------");
                             Console.WriteLine($"{howMany} of those, comin' in hot!");
-
-                            Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
-                            Console.ReadLine();
+                            
+                            // Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
+                            // Console.ReadLine();
 
                             List<P1SC_ModelsClass> cart = shoppingCart_bc.ShoppingList();
+
+                            // Console.WriteLine($"Items in cart {cart.Count}");
+                            // Console.ReadLine();
 
                             for(int x = 0; x<cart.Count; x++)
                             {
@@ -716,11 +723,12 @@ namespace P1StoreApp
                                 Console.WriteLine($"{products[cart[x].fk_ProductID].price}");
                                 Console.ReadLine();
                             }
-                            numOfItemsInCart += Convert.ToInt32(howMany);
-                            
 
-                            Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
-                            Console.ReadLine();
+                            totalCostofCart += Convert.ToInt32(howMany) * products[cart[cartSlot].fk_ProductID].price;
+                            numOfItemsInCart += Convert.ToInt32(howMany);
+
+                            // Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
+                            // Console.ReadLine();
 
                             startShop(storeNum, totalCostofCart, numOfItemsInCart);
 
@@ -734,6 +742,7 @@ namespace P1StoreApp
                 {
                     bool onTheList = false;
                     decimal thePrice = 0;
+                    int cartSlot = 0;
 
                     List<P1SC_ModelsClass> cart = shoppingCart_bc.ShoppingList();
                     foreach(P1SC_ModelsClass c in cart)
@@ -742,6 +751,7 @@ namespace P1StoreApp
                         {
                             onTheList = true;
                             thePrice = products[c.fk_ProductID].price;
+                            cartSlot = c.CartSlotID;
                             continue;
                         }
                     }
@@ -775,7 +785,7 @@ namespace P1StoreApp
                         // numOfItemsInCart += Convert.ToInt32(howMany);
 
                         string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                        string myCartQuery = $"INSERT INTO shopping_cart (fk_ProductID, quantity_in_cart) VALUES ({Convert.ToInt32(dObj)}, {Convert.ToInt32(howMany)});";
+                        string myCartQuery = $"UPDATE shopping_cart SET quantity_in_cart = quantity_in_cart - {Convert.ToInt32(howMany)} WHERE CartSlotID = {cartSlot};";
                         string myCartQuery2 = $"UPDATE products SET inventory = inventory - {Convert.ToInt32(howMany)} WHERE ProductID = {Convert.ToInt32(dObj)};";
 
                         using (SqlConnection cartQuery = new SqlConnection(connectionString))
@@ -796,15 +806,19 @@ namespace P1StoreApp
                             cartQuery2.Close();
                                         
                         }
+
+                        
                         Console.WriteLine("---------------------------------------------------");
                         Console.WriteLine($"{howMany} of those, out of your cart.");
+                        startShop(storeNum, totalCostofCart, numOfItemsInCart);
                     }
                     else
                     {
                         Console.WriteLine("---------------------------------------------------");
                         Console.WriteLine("That's not even in your cart.");
+                        startShop(storeNum, totalCostofCart, numOfItemsInCart);
                     }
-                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
+                    //startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
 
                 else if(act == "checkout")
@@ -847,33 +861,37 @@ namespace P1StoreApp
                     {
                         Console.WriteLine($"You have - {c.quantity_in_cart} of product {c.fk_ProductID}, that is {products[c.fk_ProductID].p_name}, {products[c.fk_ProductID].intensity} ");
                     }
-                    startShop(storeNum, totalCostofCart, numOfItemsInCart);
-                }
-                else if(act == "wipe")
-                {
-                    //truncate the shopping cart
-                    string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-
-                    string myCartQuery2 = $"TRUNCATE TABLE shopping_cart;";                        
-
-                    using (SqlConnection cartQuery2 = new SqlConnection(connectionString))
+                    if(cart.Count == 0)
                     {
-
-                        SqlCommand command = new SqlCommand(myCartQuery2, cartQuery2);
-                        cartQuery2.Open();
-                        SqlDataReader results9 = command.ExecuteReader();
-                        cartQuery2.Close();
-                                    
+                        Console.WriteLine("Your cart is currently empty.");
                     }
                     startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
+                // else if(act == "wipe")
+                // {
+                //     //truncate the shopping cart
+                //     string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
+
+                //     string myCartQuery2 = $"TRUNCATE TABLE shopping_cart;";                        
+
+                //     using (SqlConnection cartQuery2 = new SqlConnection(connectionString))
+                //     {
+
+                //         SqlCommand command = new SqlCommand(myCartQuery2, cartQuery2);
+                //         cartQuery2.Open();
+                //         SqlDataReader results9 = command.ExecuteReader();
+                //         cartQuery2.Close();
+                                    
+                //     }
+                //     startShop(storeNum, totalCostofCart, numOfItemsInCart);
+                // }
                 else if(act == "history")
                 {
                     List<P1OH_ModelsClass> orders = orderHistory_bc.OrdersList();
                     foreach(P1OH_ModelsClass o in orders)
                     {
-                        Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID].name_of_user} ordered $ {o.total_cost}");
+                        Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID-1].name_of_user} ordered $ {o.total_cost}");
                     }
                     startShop(storeNum, totalCostofCart, numOfItemsInCart);
                 }
