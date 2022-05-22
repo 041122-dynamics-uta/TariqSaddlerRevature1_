@@ -77,7 +77,8 @@ namespace P1Repository
                 OrderID = (int)reader5[0],
                 fk_StoreID = (int)reader5[1],
                 fk_CustomerID = (int)reader5[2],
-                total_cost = (decimal)reader5[3]
+                total_cost = (decimal)reader5[3],
+                order_datetime = (DateTime)reader5[4]
             };
             return oh;
         }

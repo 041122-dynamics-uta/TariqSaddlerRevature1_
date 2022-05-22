@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace P1StoreApp
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace P1StoreApp
 
             P1RepoClass rc = new P1RepoClass();//creates an instance of the repo class
             P1BusinessClass bc = new P1BusinessClass(rc);//creates an instance of the business class that takes an instance the repo class as an argument.
-            List<P1ModelsClass> products = bc.ProductsList();
+            List<P1ModelsClass> products = bc.ProductsList();//creates a dummy list of the products
 
             P1S_RepoClass store_rc = new P1S_RepoClass();
             P1S_BusinessClass stores_bc = new P1S_BusinessClass(store_rc);
@@ -222,15 +222,7 @@ namespace P1StoreApp
                     shopProducts();
                 }
             }
-                //IF VIEW:
-                //Prompt user to write specifications: "What attribute would you like to filter?"
-                //Intensity, Price, Name, etc...
-                //Type 'search' or '' to commence the search
-                //Reprompt for more filters
-                //Once search commences, initialize a list of all the products
-                //Go through functions corresponding to filters, every filter returns that list minus the products that didn't match
-                //Once that's done, for loop print each product on the list and their attributes
-                //Reprompt: Shop or view?
+                
             
             void viewHistory()
             {
@@ -238,7 +230,8 @@ namespace P1StoreApp
                 foreach(P1OH_ModelsClass o in orders)
                 {
                     Console.WriteLine($"From Store {o.fk_StoreID} Customer number {o.fk_CustomerID}, named {customers[o.fk_CustomerID-1].name_of_user} ordered $ {o.total_cost} of products.");
-                }
+                    Console.WriteLine($"Order was taken at {o.order_datetime}");                                                    //^
+                }                                                                             //-1 because the table is 0-based and the fk starts at 1
                 if(orders.Count == 0)
                 {
                     Console.WriteLine("----------------------------");
@@ -248,6 +241,15 @@ namespace P1StoreApp
                 historyOrShop();
             }
 
+                //IF VIEW:
+                //Prompt user to write specifications: "What attribute would you like to filter?"
+                //Intensity, Price, Name, etc...
+                //Type 'search' or '' to commence the search
+                //Reprompt for more filters
+                //Once search commences, initialize a list of all the products
+                //Go through functions corresponding to filters, every filter returns that list minus the products that didn't match
+                //Once that's done, for loop print each product on the list and their attributes
+                //Reprompt: Shop or view?
 
 
             void viewProducts(int currentStore)
@@ -633,8 +635,8 @@ namespace P1StoreApp
                         if(alreadyInCart)
                         {
 
-                            Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
-                            Console.ReadLine();
+                            // Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
+                            // Console.ReadLine();
                             
 
                             string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
@@ -717,12 +719,12 @@ namespace P1StoreApp
                             // Console.WriteLine($"Items in cart {cart.Count}");
                             // Console.ReadLine();
 
-                            for(int x = 0; x<cart.Count; x++)
-                            {
-                                totalCostofCart += products[cart[x].fk_ProductID].price;
-                                Console.WriteLine($"{products[cart[x].fk_ProductID].price}");
-                                Console.ReadLine();
-                            }
+                            // for(int x = 0; x<cart.Count; x++)
+                            // {
+                            //     totalCostofCart += products[cart[x].fk_ProductID].price;
+                            //     Console.WriteLine($"{products[cart[x].fk_ProductID].price}");
+                            //     Console.ReadLine();
+                            // }
 
                             totalCostofCart += Convert.ToInt32(howMany) * products[cart[cartSlot].fk_ProductID].price;
                             numOfItemsInCart += Convert.ToInt32(howMany);
@@ -825,7 +827,7 @@ namespace P1StoreApp
                 {
                     //should be a condition to check if the cart is empty
                     string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                    string myCartQuery = $"INSERT INTO order_history (fk_StoreID, fk_CustomerID, total_cost) VALUES ({storeNum}, {currentID}, {totalCostofCart});";    
+                    string myCartQuery = $"INSERT INTO order_history (fk_StoreID, fk_CustomerID, total_cost, order_datetime) VALUES ({storeNum}, {currentID}, {totalCostofCart}, '{DateTime.Now}');";    
                     string myCartQuery2 = $"TRUNCATE TABLE shopping_cart;";                        
 
                     using (SqlConnection cartQuery = new SqlConnection(connectionString))
@@ -849,7 +851,7 @@ namespace P1StoreApp
                     numOfItemsInCart = 0;
                     totalCostofCart = 0;
                     Console.WriteLine("---------------------------------------------------");
-                    Console.WriteLine("BOOM! It's all yours, pal! Thank for your money!");
+                    Console.WriteLine("BOOM! It's all yours, pal! Thank you!");
                     startShop(storeNum, totalCostofCart, numOfItemsInCart);
 
                 }
@@ -904,6 +906,9 @@ namespace P1StoreApp
                 }
 
             }
+
+
+            //We're not doing this part
             // void enterStore2(string act, string dObj, decimal totalCostofCart, int numOfItemsInCart)
             // {
             //     //simply paste from the previous store and change variables
@@ -1129,5 +1134,8 @@ namespace P1StoreApp
             // }
         loginOrRegisterHere(); 
         }
+
+
+        
     }
 }
