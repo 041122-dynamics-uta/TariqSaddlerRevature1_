@@ -34,5 +34,6 @@ public class P1OH_ModelsClass//Instantiate these values, they will be redefined
     public int fk_StoreID {get; set;} = 1;
     public int fk_CustomerID {get; set;} = 1;
     public decimal total_cost {get; set;} = 0;
+    public DateTime order_datetime {get; set;} = DateTime.Now;
     
 }
