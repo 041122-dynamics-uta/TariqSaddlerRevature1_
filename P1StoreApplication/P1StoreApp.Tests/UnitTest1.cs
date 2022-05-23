@@ -6,22 +6,36 @@ namespace P1StoreApp.Tests
 {
     public class UnitTest1
     {
+
         [Fact]
-        public void AddOneItemToCart()
+        public void StringToUpperReturnsAllUpperCase()
         {
             //Arrange
-            string[] arguments = new string[] {"login", "Tarizzle", "1and2and3and4", "shop", "1", "add 1", "1", "checkout", "log out", "quit"};
+            string s1 = "This is a test";
 
             //Act
-            //Program.Main(arguments);
+            string result = Program.StringToUpper(s1);
+            string expected = "THIS IS A TEST";
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
+        
+        [Fact]
+        public void AddOneItemToCart() //In a world that makes sense to me, this test would check if I successfully put an item in the cart and also check the price of the cart
+        {
+            //Arrange
+            //Program.howMany = 1;
+
+            //Act
+            //Program.enterStore(1, "add", "1", 0, 0);
             
 
 
             //Assert
-            // P1OH_RepoClass orderHistory_rc = new P1OH_RepoClass();
-            // P1OH_BusinessClass orderHistory_bc = new P1OH_BusinessClass(orderHistory_rc);
-            // List<P1OH_ModelsClass> orders = orderHistory_bc.OrdersList();
-            // Assert.Equal(1, orders.Count);
+            // Assert.Equal(8.99, totalCostofCart);
+            // Assert.Equal(1, numOfItemsInCart);
+            // Assert.Equal(1, carts.Count);
 
         }
 
@@ -29,7 +43,7 @@ namespace P1StoreApp.Tests
         public void AddTwoSameItemToCart()
         {
             // //Arrange
-            // Program.howMany = 2;
+            // howMany = 2;
 
             // //Act
 
@@ -38,10 +52,10 @@ namespace P1StoreApp.Tests
             
 
 
-            // //Assert
-            // Assert.Equal(26.97, Program.totalCostofCart);
-            // Assert.Equal(3, Program.numOfItemsInCart);
-            // Assert.Equal(1, Program.carts.Count);
+            // // //Assert
+            // Assert.Equal(26.97, totalCostofCart);
+            // Assert.Equal(3, numOfItemsInCart);
+            // Assert.Equal(1, carts.Count);
 
         }
 
