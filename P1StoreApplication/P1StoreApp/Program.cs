@@ -10,6 +10,9 @@ namespace P1StoreApp
     public class Program
     {
         public static int currentID = 0;
+        public static decimal totalMoney = 0;
+        public static string howMany = "";
+        public static int numberOfItems = 0;
         public static string StringToUpper(string usersString)
         {
             string r = usersString.ToUpper();
@@ -416,7 +419,7 @@ namespace P1StoreApp
                     break;
                 }
                 Console.WriteLine("Good to go!");
-                loginOrRegisterHere();
+                
             }
             string connectionString = "Server=tcp:tariqsaddlerserver.database.windows.net,1433;Initial Catalog=P1Store;Persist Security Info=False;User ID=TariqSaddlerDB;Password=One23Four%;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             string myCustomerQuery = $"INSERT INTO CustomerInfo (name_of_user, username, user_pw, user_email) VALUES ('{nameOfUser}', '{userNameInput}', '{pw}', '{email}');";
@@ -437,8 +440,10 @@ namespace P1StoreApp
                     currentID = customers[i].CustomerID;  
                 }
             }
+            loginOrRegisterHere();
+
             
-        historyOrShop();
+        //historyOrShop();
         }
 
         public static void historyOrShop()
@@ -564,7 +569,7 @@ namespace P1StoreApp
                     List<P1ModelsClass> products = getProducts();
                     List<P1SC_ModelsClass> cart = getCart();
                     Console.WriteLine($"How many units of {products[Convert.ToInt32(dObj)-1].p_name} do you want? (Type 'cancel' to cancel.)");
-                    string howMany = Console.ReadLine();
+                    howMany = Console.ReadLine();
 
                     if(howMany == "cancel" || howMany == "wait go back" || howMany == "escape")
                     {
@@ -708,6 +713,9 @@ namespace P1StoreApp
                             // Console.WriteLine($"TOTAL COST IS {totalCostofCart}");
                             // Console.ReadLine();
 
+                            numberOfItems = numOfItemsInCart;
+                            totalMoney = totalCostofCart;
+
                             startShop(storeNum, totalCostofCart, numOfItemsInCart);
 
                             
@@ -715,7 +723,9 @@ namespace P1StoreApp
                         }
                     }
                     
+                    
                 }
+                
                 else if (act == "delete")
                 {
                     bool onTheList = false;
@@ -738,7 +748,7 @@ namespace P1StoreApp
                     {
                         //List<P1ModelsClass> products = getProducts();
                         Console.WriteLine($"How many units of {products[Convert.ToInt32(dObj)].p_name} do you want to take out your cart? (Type 'cancel' to cancel.)");
-                        string howMany = Console.ReadLine();
+                        howMany = Console.ReadLine();
 
                         if(howMany == "cancel" || howMany == "wait go back" || howMany == "escape")
                         {
@@ -787,6 +797,8 @@ namespace P1StoreApp
                                         
                         }
 
+                        numberOfItems = numOfItemsInCart;
+                        totalMoney = totalCostofCart;
                         
                         Console.WriteLine("---------------------------------------------------");
                         Console.WriteLine($"{howMany} of those, out of your cart.");
@@ -828,6 +840,9 @@ namespace P1StoreApp
                     }
                     numOfItemsInCart = 0;
                     totalCostofCart = 0;
+
+                    numberOfItems = numOfItemsInCart;
+                    totalMoney = totalCostofCart;
                     Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine("BOOM! It's all yours, pal! Thank you!");
                     startShop(storeNum, totalCostofCart, numOfItemsInCart);
