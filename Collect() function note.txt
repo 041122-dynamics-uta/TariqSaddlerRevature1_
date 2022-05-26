@@ -1,0 +1,8 @@
+Collect()
+Simply add data to a data source.
+
+Formatted as follows:
+Collect(ListName,
+{ColumnName: Data, ColumnName2: Data})
+
+Note: Required fields must be filled or else the data simply won't be added.
